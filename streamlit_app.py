@@ -36,7 +36,7 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is None:
-    st.info("Upload a CSV to begin. You can try practice.csv first.")
+    st.info("Upload a CSV to begin.")
     st.stop()
 
 # Read the uploaded bytes.
