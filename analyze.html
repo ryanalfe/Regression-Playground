@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; worker-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Analyze your data · Regression Playground · Ryan Alfe</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="analyze.css">
+  <script src="analysis-core.js" defer></script>
+  <script src="sample-data.js" defer></script>
+  <script src="analyze.js" defer></script>
+</head>
+<body>
+<header><a class="brand" href="index.html"><span class="mark">↗</span> Regression Playground</a><nav aria-label="Main navigation"><a href="index.html">Home</a><a href="playground.html">Playground</a><a href="playground.html#reading-guide">Reading guide</a><a href="analyze.html" aria-current="page">Analyze your data</a></nav></header>
+<main class="analyzer">
+  <section class="intro"><div><span class="eyebrow">FROM DATA TO UNDERSTANDING</span><h1>Find the story in your data.</h1><p>Try an example or open a CSV. Build a model, see its predictions, and explore what it misses.</p></div><span class="privacy-badge">On-device analysis</span></section>
+  <details class="privacy"><summary>Your CSV stays in this browser</summary><p>Files are read and analyzed locally. This analyzer has no upload endpoint, analytics, third-party scripts, or browser storage. Its content security policy blocks network connections from the page. Clear data removes the current file and results from the interface and releases the app’s references; closing the tab ends the session. This is not a guarantee of secure memory erasure.</p><p>Your hosting provider still receives ordinary requests for the website’s public files. Browser extensions and your device are outside this page’s control. Use synthetic examples when sharing your screen.</p></details>
+  <section class="analysis-panel" aria-labelledby="start-title"><div class="section-heading"><div><span class="eyebrow">01 / CHOOSE A DATASET</span><h2 id="start-title">A question is a good place to start.</h2></div><button id="clear" type="button">Clear data</button></div>
+    <div class="sample-grid">
+      <article class="sample-card"><span class="mini-label">SYNTHETIC · MULTIPLE REGRESSION</span><h3>What goes with higher sales?</h3><p>Explore advertising, store visits, and weekly sales. Compare a one-predictor model with a two-predictor model.</p><button type="button" data-sample="sales">Try sales data</button><a href="datasets/synthetic-sales.csv" download>Download CSV</a></article>
+      <article class="sample-card"><span class="mini-label">SYNTHETIC · MODEL LIMITATIONS</span><h3>Can a straight line miss the story?</h3><p>Compare temperature and ice cream sales. A curved relationship makes the model’s limits visible.</p><button type="button" data-sample="curve">Try temperature data</button><a href="datasets/synthetic-temperature.csv" download>Download CSV</a></article>
+    </div>
+    <div class="file-choice"><label for="csv-file"><strong>Or open your own CSV</strong><span>UTF-8 with a header · up to 5 MB, 10,000 rows, and 100 columns</span></label><input id="csv-file" type="file" accept=".csv,text/csv"></div>
+    <p id="status" role="status" aria-live="polite">Choose an example to get started. No account or upload needed.</p><p id="error" role="alert" hidden></p>
+  </section>
+  <section id="dataset-panel" class="analysis-panel" hidden aria-labelledby="dataset-title">
+    <span class="eyebrow">02 / BUILD YOUR MODEL</span><h2 id="dataset-title">Your dataset</h2><p id="dataset-summary"></p><p id="sample-prompt" class="sample-prompt"></p>
+    <details><summary>Preview the first 8 rows</summary><div class="table-scroll" id="preview"></div></details>
+    <div class="model-controls"><div><label for="outcome">Outcome (y): what are you explaining?</label><select id="outcome"></select></div><fieldset><legend>Predictors (X): what might explain it?</legend><div id="predictors"></div></fieldset></div>
+    <p class="help">Select 1–10 numeric predictors. Blank, nonnumeric, and nonfinite values in selected columns are excluded, never treated as zero. Avoid IDs or category codes as continuous predictors.</p>
+    <button id="run" class="primary-button" type="button">Run regression</button>
+  </section>
+  <section id="model-results" hidden aria-labelledby="results-title">
+    <div class="section-heading"><div><span class="eyebrow">03 / READ THE RELATIONSHIP</span><h2 id="results-title" tabindex="-1">What does your model tell you?</h2></div></div>
+    <p id="row-summary"></p><div id="metrics" class="metrics-grid"></div><p class="help">These are training results, measured on the same rows used to fit the model. They do not measure accuracy on new data or establish cause and effect.</p>
+    <div class="plots-grid">
+      <article class="analysis-panel"><h3>The relationship</h3><label for="plot-predictor">Show predictor</label><select id="plot-predictor"></select><div id="relationship-chart"></div><p id="relationship-note"></p></article>
+      <article class="analysis-panel"><h3>How close are the predictions?</h3><div id="prediction-chart"></div><p>Points on the dashed line are predicted exactly. Points above it were underpredicted; points below it were overpredicted.</p></article>
+      <article class="analysis-panel"><h3>What does the model miss?</h3><div id="residual-chart"></div><p>Residual = actual − predicted. Look for a curve or widening spread instead of a random cloud around zero.</p></article>
+      <article class="analysis-panel"><h3>How big are the errors?</h3><div id="error-chart"></div><p>Bars count rows by prediction error. Values near zero mean smaller errors; long tails reveal unusually large misses. This alone does not test all model assumptions.</p></article>
+    </div><p id="plot-sampling" class="help"></p>
+    <section class="analysis-panel"><h3>Explain the coefficients</h3><div id="coefficients" class="table-scroll"></div><p>Each slope is the predicted change in the outcome for a one-unit increase in that predictor, holding other included predictors constant. The intercept is the predicted outcome when all predictors are zero, which may be outside the data’s range.</p><p class="help">Coefficients use their original units; their sizes do not rank predictor importance. This browser analyzer reports descriptive OLS estimates, without p-values or confidence intervals.</p></section>
+  </section>
+  <noscript><p>Enable JavaScript for on-device regression. Your file will not be uploaded.</p></noscript>
+  <footer><span>Built by Ryan Alfe · Synthetic examples for learning</span><a href="https://github.com/ryanalfe/Regression-Playground">View the project on GitHub</a></footer>
+</main>
+</body>
+</html>
